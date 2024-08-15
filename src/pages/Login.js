@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Button, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../api'; 
 
@@ -27,28 +27,32 @@ const Login = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 400, mx: 'auto', mt: 5 }}>
-            <Typography variant="h4" mb={2}>Login</Typography>
-            {error && <Typography color="error">{error}</Typography>}
-            <TextField
-                label="Username"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <TextField
-                label="Password"
-                variant="outlined"
-                type="password"
-                fullWidth
-                margin="normal"
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button variant="contained" onClick={handleLogin} fullWidth>
-                Login
-            </Button>
-        </Box>
+        <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: '100vh', px: 2 }}>
+            <Grid item xs={12} sm={8} md={6} lg={4}>
+                <Box sx={{ p: 3, boxShadow: 3, borderRadius: 2, bgcolor: 'background.paper' }}>
+                    <Typography variant="h4" mb={2} textAlign="center">Login</Typography>
+                    {error && <Typography color="error" mb={2} textAlign="center">{error}</Typography>}
+                    <TextField
+                        label="Username"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <TextField
+                        label="Password"
+                        variant="outlined"
+                        type="password"
+                        fullWidth
+                        margin="normal"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <Button variant="contained" onClick={handleLogin} fullWidth sx={{ mt: 2 }}>
+                        Login
+                    </Button>
+                </Box>
+            </Grid>
+        </Grid>
     );
 };
 

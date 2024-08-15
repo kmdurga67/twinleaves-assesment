@@ -1,14 +1,12 @@
 {
   "users": [
     {
-      "id": "cf93",
-      "username": "durga",
-      "password": "singh5698"
-    },
-    {
-      "id": "557b",
-      "username": "Akansha12",
-      "password": "Akansha123"
+      "id": "2208",
+      "username": "Durga12",
+      "password": "Singh56",
+      "firstName": "Kumari ",
+      "lastName": "Durga",
+      "email": "singhdurga5698@gmail.com"
     }
   ]
 }
