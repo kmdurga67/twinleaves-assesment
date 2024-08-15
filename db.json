@@ -7,6 +7,14 @@
       "firstName": "Kumari ",
       "lastName": "Durga",
       "email": "singhdurga5698@gmail.com"
+    },
+    {
+      "id": "bb53",
+      "username": "Shreya12",
+      "password": "Shreya12",
+      "firstName": "Shreya",
+      "lastName": "Ghoshal",
+      "email": "shreya12@gmail.com"
     }
   ]
 }

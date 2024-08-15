@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { loginUser } from '../api'; 
 
 const Login = () => {
@@ -17,12 +18,15 @@ const Login = () => {
             );
             if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
+                toast.success('Login successful!');
                 navigate('/home');
             } else {
                 setError('Invalid username or password');
+                toast.error('Invalid username or password');
             }
         } catch (err) {
             setError('Error logging in');
+            toast.error('Error logging in');
         }
     };
 

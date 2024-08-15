@@ -6,6 +6,8 @@ import Cart from './pages/Cart';
 import ProductDetails from './components/ProductDetails';
 import Registration from './pages/Registration';
 import ErrorBoundary from './components/ErrorBoundary';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
     const isAuthenticated = !!localStorage.getItem('user');
@@ -13,6 +15,7 @@ const App = () => {
     return (
         <>
             <ErrorBoundary>
+            <ToastContainer />
                 <Routes>
                     <Route path="/" element={<Registration />} />
                     <Route path="/login" element={<Login />} />
