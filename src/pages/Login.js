@@ -19,7 +19,7 @@ const Login = () => {
             if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
                 toast.success('Login successful!');
-                navigate('/home');
+                navigate('/cart');
             } else {
                 setError('Invalid username or password');
                 toast.error('Invalid username or password');

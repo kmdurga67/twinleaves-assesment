@@ -1,32 +1,40 @@
-import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Cart from './pages/Cart';
-import ProductDetails from './components/ProductDetails';
-import Registration from './pages/Registration';
-import ErrorBoundary from './components/ErrorBoundary';
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import React from "react";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Cart from "./pages/Cart";
+import ProductDetails from "./components/ProductDetails";
+import Registration from "./pages/Registration";
+import ErrorBoundary from "./components/ErrorBoundary";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import Header from "./components/Header";
 
 const App = () => {
-    const isAuthenticated = !!localStorage.getItem('user');
+  const user = JSON.parse(localStorage.getItem("user"));
+  const username = user?.username || "";
+  const location = useLocation();
 
-    return (
-        <>
-            <ErrorBoundary>
-            <ToastContainer />
-                <Routes>
-                    <Route path="/" element={<Registration />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/cart" element={isAuthenticated ? <Cart /> : <Navigate to="/login" />} />
-                    <Route path="/product/:id" element={isAuthenticated ? <ProductDetails /> : <Navigate to="/login" />} />
-                    <Route path="*" element={<Navigate to="/" />} />
-                </Routes>
-            </ErrorBoundary>
-        </>
-    );
+  const hideHeaderRoutes = ["/", "/login"];
+
+  return (
+    <>
+      <ErrorBoundary>
+        <ToastContainer />
+        {!hideHeaderRoutes.includes(location.pathname) && (
+          <Header username={username} />
+        )}
+        <Routes>
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </ErrorBoundary>
+    </>
+  );
 };
 
 export default App;
