@@ -15,7 +15,7 @@ const App = () => {
   const username = user?.username || "";
   const location = useLocation();
 
-  const hideHeaderRoutes = ["/", "/login"];
+  const hideHeaderRoutes = ["registration", "/login"];
 
   return (
     <>

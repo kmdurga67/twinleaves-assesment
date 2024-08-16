@@ -96,7 +96,9 @@ const Home = () => {
       renderCell: (params) => (
         <Button
           onClick={() =>
-            navigate(`/product/${params.row.id || params.row.sku_code}`)
+            navigate(`/product/${params.row.id || params.row.sku_code}`, {
+              state: { product: params.row },
+            })
           }
         >
           View Details
@@ -140,7 +142,7 @@ const Home = () => {
       ) : (
         <DataGrid
           rows={filteredProducts.map((product) => ({
-            id: product.id,
+            id: product.id || product.sku_code,
             ...product,
           }))}
           columns={columns}

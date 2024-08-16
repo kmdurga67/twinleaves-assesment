@@ -1,43 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, CardContent, Typography, CardMedia } from '@mui/material';
-import { fetchProducts } from '../api';
+import React from 'react';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Button,
+  Box,
+} from '@mui/material';
 
 const ProductDetails = () => {
-    const { id } = useParams();
-    const [product, setProduct] = useState(null);
+  const { id } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { product } = location.state || {};
 
-    useEffect(() => {
-        const getProduct = async () => {
-            try {
-                const data = await fetchProducts();
-                const foundProduct = data.products.find(p => p.id === id);
-                setProduct(foundProduct);
-            } catch (error) {
-                console.error('Error fetching product details', error);
-            }
-        };
-        getProduct();
-    }, [id]);
+  const productData = product || {};
 
-    if (!product) return <div>Loading...</div>;
-
+  if (!productData && !id) {
     return (
-        <Card>
-            <CardMedia
-                component="img"
-                height="140"
-                image={product.images.front || 'placeholder-image-url'}
-                alt={product.name}
-            />
-            <CardContent>
-                <Typography variant="h5">{product.name}</Typography>
-                <Typography variant="body1">{product.description || 'No description available'}</Typography>
-                <Typography variant="body2" color="textSecondary">Category: {product.main_category}</Typography>
-                <Typography variant="body2" color="textSecondary">Price: ₹{product.mrp.mrp}</Typography>
-            </CardContent>
-        </Card>
+      <Container maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography variant="h6">No product data available.</Typography>
+      </Container>
     );
+  }
+
+  const displayProduct = productData;
+
+  const handleAddToCart = () => {
+    navigate('/registration', { state: { redirect: '/login', product: displayProduct } });
+  };
+
+  return (
+    <Container maxWidth="md" sx={{ my: 4 }}>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardMedia
+              component="img"
+              alt={displayProduct.name}
+              height="300"
+              image={displayProduct.images?.front || "https://via.placeholder.com/300"}
+              sx={{ objectFit: 'cover' }}
+            />
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h4" gutterBottom>
+                {displayProduct.name}
+              </Typography>
+              <Typography variant="h6" color="textSecondary">
+                Category: {displayProduct.main_category}
+              </Typography>
+              <Typography variant="h5" color="primary" gutterBottom>
+                ₹{displayProduct.mrp?.mrp}
+              </Typography>
+              <Typography variant="body1" paragraph>
+                {displayProduct.description}
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Button variant="contained" color="primary" onClick={handleAddToCart}>
+                  Add to Cart
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
+  );
 };
 
 export default ProductDetails;
