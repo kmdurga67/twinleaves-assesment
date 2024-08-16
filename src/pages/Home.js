@@ -88,7 +88,7 @@ const Home = () => {
           return "N/A";
         }
       },
-    },        
+    },
     {
       field: "details",
       headerName: "Details",
@@ -145,12 +145,15 @@ const Home = () => {
           }))}
           columns={columns}
           getRowId={(row) => row.id || row.sku_code}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
+          pageSize={20}
+          rowsPerPageOptions={[20]}
           pagination
           paginationMode="server"
-          rowCount={filteredProducts.length}
-          onPageChange={(newPage) => setPage(newPage + 1)}
+          rowCount={totalPages}
+          paginationModel={{ page: page - 1, pageSize: 20 }} 
+          onPaginationModelChange={(model) => {
+            setPage(model.page + 1); 
+          }}
           sortingOrder={["asc", "desc"]}
           sortModel={[{ field: "mrp", sort }]}
           onSortModelChange={(model) => {
