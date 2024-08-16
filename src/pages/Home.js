@@ -9,7 +9,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import ProductCard from "../components/ProductCard";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -18,9 +18,9 @@ const Home = () => {
   const [category, setCategory] = useState("");
   const [sort, setSort] = useState("asc");
   const [search, setSearch] = useState("");
-  const [cart, setCart] = useState(
-    () => JSON.parse(localStorage.getItem("cart")) || []
-  );
+  const [totalPages, setTotalPages] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -28,6 +28,12 @@ const Home = () => {
       try {
         const data = await fetchProducts(page);
         setProducts(data.products);
+        setTotalPages(parseInt(data.totalPages, 10));
+
+        const uniqueCategories = [
+          ...new Set(data.products.map((product) => product.main_category)),
+        ];
+        setCategories(uniqueCategories);
       } catch (error) {
         console.error("Error fetching products", error);
       } finally {
@@ -39,38 +45,58 @@ const Home = () => {
 
   const handleSearch = (e) => setSearch(e.target.value);
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleCategoryChange = (e) => setCategory(e.target.value);
 
-  const handleAddToCart = (product) => {
-    const updatedCart = [...cart, product];
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
+  const handleSortChange = (e) => setSort(e.target.value);
 
-  const handleRemoveFromCart = (id) => {
-    const updatedCart = cart.filter((item) => item.id !== id);
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
+  const filteredProducts = products
+    .filter((product) =>
+      product.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .filter((product) => (category ? product.main_category === category : true))
+    .sort((a, b) => {
+      if (sort === "asc") return a.mrp.mrp - b.mrp.mrp;
+      if (sort === "desc") return b.mrp.mrp - a.mrp.mrp;
+      return 0;
+    });
 
   const columns = [
+    {
+      field: "image",
+      headerName: "Image",
+      width: 150,
+      renderCell: (params) => (
+        <img
+          src={params.row.images.front || "https://via.placeholder.com/150"}
+          alt={params.row.name}
+          style={{ width: 100, height: 100, objectFit: "cover" }}
+        />
+      ),
+    },
     { field: "id", headerName: "ID", width: 150 },
-    { field: "name", headerName: "Name", width: 300 },
-    { field: "main_category", headerName: "Category", width: 200 },
+    { field: "name", headerName: "Product Name", width: 400 },
+    { field: "main_category", headerName: "Category", width: 250 },
     {
       field: "mrp",
       headerName: "Price",
       width: 150,
-      valueFormatter: ({ value }) => `₹${value?.mrp || "N/A"}`,
+      valueFormatter: ({ value }) => {
+        if (value && value.mrp) {
+          return `₹${value.mrp}`;
+        }
+        return "N/A";
+      },
     },
     {
       field: "details",
       headerName: "Details",
       width: 150,
       renderCell: (params) => (
-        <Button to={`/product/${params.row.id}`}>
+        <Button
+          onClick={() =>
+            navigate(`/product/${params.row.id || params.row.sku_code}`)
+          }
+        >
           View Details
         </Button>
       ),
@@ -83,26 +109,29 @@ const Home = () => {
         label="Search"
         variant="outlined"
         onChange={handleSearch}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, width: "100%" }}
       />
       <Select
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={handleCategoryChange}
         displayEmpty
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, width: "100%" }}
       >
         <MenuItem value="">All Categories</MenuItem>
-        <MenuItem value="HOUSE HOLD NEEDS">Household Needs</MenuItem>
-        {/* Add more categories as needed */}
+        {categories.map((cat) => (
+          <MenuItem key={cat} value={cat}>
+            {cat}
+          </MenuItem>
+        ))}
       </Select>
       <Select
         value={sort}
-        onChange={(e) => setSort(e.target.value)}
+        onChange={handleSortChange}
         displayEmpty
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, width: "100%" }}
       >
-        <MenuItem value="asc">Price Ascending</MenuItem>
-        <MenuItem value="desc">Price Descending</MenuItem>
+        <MenuItem value="asc">Ascending</MenuItem>
+        <MenuItem value="desc">Descending</MenuItem>
       </Select>
       {loading ? (
         <CircularProgress />
@@ -113,23 +142,22 @@ const Home = () => {
             ...product,
           }))}
           columns={columns}
-          getRowId={(row) => row.id || row.sku_code} 
+          getRowId={(row) => row.id || row.sku_code}
           pageSize={10}
           rowsPerPageOptions={[10]}
           pagination
+          paginationMode="server"
+          rowCount={filteredProducts.length}
           onPageChange={(newPage) => setPage(newPage + 1)}
+          sortingOrder={["asc", "desc"]}
           sortModel={[{ field: "mrp", sort }]}
+          onSortModelChange={(model) => {
+            if (model.length > 0) {
+              setSort(model[0].sort);
+            }
+          }}
         />
       )}
-      <Box sx={{ mt: 2 }}>
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={handleAddToCart}
-          />
-        ))}
-      </Box>
     </Box>
   );
 };
