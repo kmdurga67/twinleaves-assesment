@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# React Product Catalogue App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This is a scalable and responsive product catalogue application built using **React** and **Material UI**. The application allows users to browse a product catalog, add items to their cart, and proceed to checkout. It includes features like search, filtering, sorting, and user authentication.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Responsive Design**: The application is fully responsive and optimized for different screen sizes, ensuring a smooth user experience on both desktop and mobile devices.
+- **Product Catalog Management**: Displays a list of products fetched from an API, with features like pagination, sorting by price, and filtering by category.
+- **Search Functionality**: Users can search for products by name.
+- **Cart Management**: Users can add products to their cart, adjust quantities, and remove items.
+- **Checkout Process**: Upon checkout, the cart is cleared, and users are redirected to a confirmation page.
+- **User Authentication**: The application supports user registration and login, ensuring that only authenticated users can access certain features.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technologies Used
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React**: A JavaScript library for building user interfaces.
+- **Material UI**: A popular React UI framework for building responsive, attractive, and consistent user interfaces.
+- **React Router**: For handling navigation and routing within the application.
+- **json-server**: A simple tool to create a fake REST API for the application.
+- **localStorage**: To persist user session data and cart items across page reloads.
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+Before you begin, ensure you have the following installed:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Node.js**: Install from [here](https://nodejs.org/)
+- **npm**: Installed automatically with Node.js
+- **Git**: For version control
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Clone the repository:**
 
-### `npm run eject`
+   ```bash
+   git clone https://github.com/kmdurga67/twinleaves-assesment.git
+   cd twinleaves-assesment
+2. **Install the dependencies**
+  
+  ```bash
+  npm install
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. **Run the fake server**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    ```bash
+    npx json-server --watch db.json --port 5000
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. **Start the development server**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    ```bash
+    npm start
 
-## Learn More
+5. **Application running on**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
