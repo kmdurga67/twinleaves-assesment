@@ -18,10 +18,18 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [category, setCategory] = useState("");
-  const [sort, setSort] = useState("asc");
-  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(() => {
+    return parseInt(localStorage.getItem("currentPage"), 10) || 1;
+  });
+  const [category, setCategory] = useState(() => {
+    return localStorage.getItem("category") || "";
+  });
+  const [sort, setSort] = useState(() => {
+    return localStorage.getItem("sort") || "asc";
+  });
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem("search") || "";
+  });
   const [totalPages, setTotalPages] = useState(1);
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
@@ -45,7 +53,14 @@ const Home = () => {
       }
     };
     loadProducts();
-  }, [page]);
+  }, [page,category, sort, search]);
+
+  useEffect(() => {
+    localStorage.setItem("currentPage", page);
+    localStorage.setItem("category", category);
+    localStorage.setItem("sort", sort);
+    localStorage.setItem("search", search);
+  }, [page, category, sort, search]);
 
   const handleSearch = (e) => setSearch(e.target.value);
 
@@ -174,7 +189,7 @@ const Home = () => {
           rowsPerPageOptions={[20]}
           pagination
           paginationMode="server"
-          rowCount={totalPages * 20} // Assuming each page has 20 products
+          rowCount={totalPages}
           paginationModel={{ page: page - 1, pageSize: 20 }} 
           onPaginationModelChange={(model) => {
             setPage(model.page + 1); 
