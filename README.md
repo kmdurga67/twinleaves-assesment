@@ -44,11 +44,11 @@ Before you begin, ensure you have the following installed:
   npm install
 3. **Run the fake server**
 
-    ```bash
-    npx json-server --watch db.json --port 5000
+  ```bash
+   npx json-server --watch db.json --port 5000
 4. **Start the development server**
 
-    ```bash
-    npm start
+  ```bash
+   npm start
 5. **Application running on**
 
