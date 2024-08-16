@@ -80,13 +80,15 @@ const Home = () => {
       field: "mrp",
       headerName: "Price",
       width: 150,
-      valueFormatter: ({ value }) => {
-        if (value && value.mrp) {
-          return `₹${value.mrp}`;
+      valueFormatter: (params) => {
+        const value = params?.mrp; 
+        if (value !== undefined && value !== null) {
+          return `₹${value}`;
+        }else{
+          return "N/A";
         }
-        return "N/A";
       },
-    },
+    },        
     {
       field: "details",
       headerName: "Details",
