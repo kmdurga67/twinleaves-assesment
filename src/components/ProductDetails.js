@@ -8,6 +8,7 @@ import {
   CardMedia,
   Button,
   Box,
+  Grid,
 } from '@mui/material';
 
 const ProductDetails = () => {
@@ -54,34 +55,45 @@ const ProductDetails = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ my: 4 }}>
-      <Card>
-        <CardMedia
-          component="img"
-          alt={productData.name || "Product Image"}
-          height="300"
-          image={productData.images?.front || "https://via.placeholder.com/300"}
-          sx={{ objectFit: 'cover' }}
-        />
-        <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {productData.name || "Product Name"}
-          </Typography>
-          <Typography variant="h6" color="textSecondary">
-            Category: {productData.main_category || "N/A"}
-          </Typography>
-          <Typography variant="h5" color="primary" gutterBottom>
-            ₹{productData.mrp?.mrp || "N/A"}
-          </Typography>
-          <Typography variant="body1" paragraph>
-            {productData.description || "No description available."}
-          </Typography>
-          <Box sx={{ mt: 2 }}>
-            <Button variant="contained" color="primary" onClick={handleAddToCart}>
-              Add to Cart
-            </Button>
-          </Box>
-        </CardContent>
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, boxShadow: 3 }}>
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            <CardMedia
+              component="img"
+              alt={productData.name || "Product Image"}
+              height="100%"
+              image={productData.images?.front || "https://via.placeholder.com/300"}
+              sx={{ objectFit: 'cover', height: '100%', width: '100%' }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
+                {productData.name || "Product Name"}
+              </Typography>
+              <Typography variant="h6" color="textSecondary" sx={{ mb: 2 }}>
+                Category: {productData.main_category || "N/A"}
+              </Typography>
+              <Typography variant="h5" color="primary" sx={{ fontWeight: 'bold', mb: 2 }}>
+                ₹{productData.mrp?.mrp || "N/A"}
+              </Typography>
+              <Typography variant="body1" paragraph sx={{ lineHeight: 1.7 }}>
+                {productData.description || "No description available."}
+              </Typography>
+              <Box sx={{ mt: 4 }}>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={handleAddToCart} 
+                  sx={{ padding: '10px 20px', fontSize: '16px' }}
+                >
+                  Add to Cart
+                </Button>
+              </Box>
+            </CardContent>
+          </Grid>
+        </Grid>
       </Card>
     </Container>
   );

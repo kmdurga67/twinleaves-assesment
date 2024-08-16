@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchProducts } from "../api";
 import {
   TextField,
   MenuItem,
@@ -8,7 +7,12 @@ import {
   CircularProgress,
   Box,
   Button,
+  Grid,
+  Typography,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
+import { fetchProducts } from "../api";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -61,25 +65,25 @@ const Home = () => {
     });
 
   const columns = [
+    { field: "id", headerName: "ID", width: 300 },
+    { field: "name", headerName: "Product Name", width: 450 },
+    { field: "main_category", headerName: "Category", width: 250 },
     {
       field: "image",
       headerName: "Image",
-      width: 150,
+      width: 220,
       renderCell: (params) => (
         <img
-          src={params.row.images.front || "https://via.placeholder.com/150"}
+          src={params.row.images.front || "https://via.placeholder.com/100"}
           alt={params.row.name}
-          style={{ width: 100, height: 100, objectFit: "cover" }}
+          style={{ width: 80, height: 80, objectFit: "cover", borderRadius: "8px" }}
         />
       ),
     },
-    { field: "id", headerName: "ID", width: 150 },
-    { field: "name", headerName: "Product Name", width: 400 },
-    { field: "main_category", headerName: "Category", width: 250 },
     {
       field: "mrp",
       headerName: "Price",
-      width: 150,
+      width: 200,
       valueFormatter: (params) => {
         const value = params?.mrp; 
         if (value !== undefined && value !== null) {
@@ -95,6 +99,8 @@ const Home = () => {
       width: 150,
       renderCell: (params) => (
         <Button
+          variant="contained"
+          color="primary"
           onClick={() =>
             navigate(`/product/${params.row.id || params.row.sku_code}`, {
               state: { product: params.row },
@@ -108,37 +114,54 @@ const Home = () => {
   ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <TextField
-        label="Search"
-        variant="outlined"
-        onChange={handleSearch}
-        sx={{ mb: 2, width: "100%" }}
-      />
-      <Select
-        value={category}
-        onChange={handleCategoryChange}
-        displayEmpty
-        sx={{ mb: 2, width: "100%" }}
-      >
-        <MenuItem value="">All Categories</MenuItem>
-        {categories.map((cat) => (
-          <MenuItem key={cat} value={cat}>
-            {cat}
-          </MenuItem>
-        ))}
-      </Select>
-      <Select
-        value={sort}
-        onChange={handleSortChange}
-        displayEmpty
-        sx={{ mb: 2, width: "100%" }}
-      >
-        <MenuItem value="asc">Ascending</MenuItem>
-        <MenuItem value="desc">Descending</MenuItem>
-      </Select>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', textAlign: 'center' }}>
+        Product Catalog
+      </Typography>
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            fullWidth
+            onChange={handleSearch}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={category}
+              onChange={handleCategoryChange}
+              label="Category"
+            >
+              <MenuItem value="">All Categories</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat} value={cat}>
+                  {cat}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>Sort By Price</InputLabel>
+            <Select
+              value={sort}
+              onChange={handleSortChange}
+              label="Sort By Price"
+            >
+              <MenuItem value="asc">Ascending</MenuItem>
+              <MenuItem value="desc">Descending</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
       {loading ? (
-        <CircularProgress />
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
+          <CircularProgress />
+        </Box>
       ) : (
         <DataGrid
           rows={filteredProducts.map((product) => ({
@@ -151,7 +174,7 @@ const Home = () => {
           rowsPerPageOptions={[20]}
           pagination
           paginationMode="server"
-          rowCount={totalPages}
+          rowCount={totalPages * 20} // Assuming each page has 20 products
           paginationModel={{ page: page - 1, pageSize: 20 }} 
           onPaginationModelChange={(model) => {
             setPage(model.page + 1); 
@@ -162,6 +185,21 @@ const Home = () => {
             if (model.length > 0) {
               setSort(model[0].sort);
             }
+          }}
+          autoHeight
+          disableColumnMenu
+          sx={{
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "primary.main",
+              color: "blue",
+              fontSize: 24,
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "1px solid rgba(224, 224, 224, 1)",
+            },
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.04)",
+            },
           }}
         />
       )}
