@@ -1,76 +1,88 @@
-import React from 'react';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   Container,
   Typography,
   Card,
   CardContent,
   CardMedia,
-  Grid,
   Button,
   Box,
 } from '@mui/material';
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
-  const { product } = location.state || {};
+  const location = useLocation();
+  const [productData, setProductData] = useState({});
 
-  const productData = product || {};
-
-  if (!productData && !id) {
-    return (
-      <Container maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Typography variant="h6">No product data available.</Typography>
-      </Container>
-    );
-  }
-
-  const displayProduct = productData;
+  useEffect(() => {
+    if (location.state && location.state.product) {
+      setProductData(location.state.product);
+    } else {
+      const fetchProduct = async () => {
+        const response = await fetch(`/api/products/${id}`);
+        const data = await response.json();
+        setProductData(data);
+      };
+      fetchProduct();
+    }
+  }, [id, location.state]);
 
   const handleAddToCart = () => {
-    navigate('/registration', { state: { redirect: '/login', product: displayProduct } });
+    const user = JSON.parse(localStorage.getItem('user'));
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    if (!user) {
+      navigate('/registration', { state: { from: `/product/${id}`, product: productData } });
+    } else {
+      const existingProductIndex = cart.findIndex((item) => item.id === productData.id || item.sku_code === productData.sku_code);
+      
+      if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += 1;
+      } else {
+        cart.push({ ...productData, quantity: 1 });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      navigate('/cart');
+    }
   };
+
+  if (!productData && !id) {
+    return <Container><Typography>No product data available.</Typography></Container>;
+  }
 
   return (
     <Container maxWidth="md" sx={{ my: 4 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardMedia
-              component="img"
-              alt={displayProduct.name}
-              height="300"
-              image={displayProduct.images?.front || "https://via.placeholder.com/300"}
-              sx={{ objectFit: 'cover' }}
-            />
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h4" gutterBottom>
-                {displayProduct.name}
-              </Typography>
-              <Typography variant="h6" color="textSecondary">
-                Category: {displayProduct.main_category}
-              </Typography>
-              <Typography variant="h5" color="primary" gutterBottom>
-                ₹{displayProduct.mrp?.mrp}
-              </Typography>
-              <Typography variant="body1" paragraph>
-                {displayProduct.description}
-              </Typography>
-              <Box sx={{ mt: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleAddToCart}>
-                  Add to Cart
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <Card>
+        <CardMedia
+          component="img"
+          alt={productData.name || "Product Image"}
+          height="300"
+          image={productData.images?.front || "https://via.placeholder.com/300"}
+          sx={{ objectFit: 'cover' }}
+        />
+        <CardContent>
+          <Typography variant="h4" gutterBottom>
+            {productData.name || "Product Name"}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            Category: {productData.main_category || "N/A"}
+          </Typography>
+          <Typography variant="h5" color="primary" gutterBottom>
+            ₹{productData.mrp?.mrp || "N/A"}
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {productData.description || "No description available."}
+          </Typography>
+          <Box sx={{ mt: 2 }}>
+            <Button variant="contained" color="primary" onClick={handleAddToCart}>
+              Add to Cart
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
   );
 };

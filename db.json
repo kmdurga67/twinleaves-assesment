@@ -1,28 +1,12 @@
 {
   "users": [
     {
-      "id": "2208",
+      "id": "d569",
       "username": "Durga12",
-      "password": "Singh56",
-      "firstName": "Kumari ",
-      "lastName": "Durga",
-      "email": "singhdurga5698@gmail.com"
-    },
-    {
-      "id": "bb53",
-      "username": "Shreya12",
-      "password": "Shreya12",
-      "firstName": "Shreya",
-      "lastName": "Ghoshal",
-      "email": "shreya12@gmail.com"
-    },
-    {
-      "id": "1abb",
-      "username": "Pankaj12",
-      "password": "Pankaj12",
-      "firstName": "Pankaj",
-      "lastName": "Sharma",
-      "email": "pankaj123@gmail.com"
+      "password": "Durga123",
+      "firstName": "Durga",
+      "lastName": "Singh",
+      "email": "durga12@gmail.com"
     }
   ]
 }
